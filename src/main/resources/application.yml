@@ -1,0 +1,8 @@
+spring:
+  data:
+    mongodb:
+      authentication-database: admin
+      username: admin
+      database: sheetdb
+      port: 27017
+      host: localhost
