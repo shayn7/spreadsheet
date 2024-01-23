@@ -2,9 +2,10 @@ package dev.naamad.spreadsheet.service_impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dev.naamad.spreadsheet.dto.SpreadsheetRequest;
 import dev.naamad.spreadsheet.dto.SpreadsheetResponse;
-import dev.naamad.spreadsheet.exception.SpreadsheetRequestException;
+import dev.naamad.spreadsheet.exception.ColumnNotFoundException;
+import dev.naamad.spreadsheet.exception.InvalidCellValueException;
+import dev.naamad.spreadsheet.exception.SheetNotFoundException;
 import dev.naamad.spreadsheet.document.Spreadsheet;
 import dev.naamad.spreadsheet.model.Column;
 import dev.naamad.spreadsheet.model.SheetSchema;
@@ -29,8 +30,33 @@ public class SpreadsheetServiceImpl implements SpreadsheetService {
     @Override
     public SpreadsheetResponse getSheetById(String sheetId) {
         Optional<Spreadsheet> spreadsheet = spreadsheetRepository.findById(sheetId);
-        if(spreadsheet.isEmpty()) throw new SpreadsheetRequestException("spreadsheet not found!");
+        if(spreadsheet.isEmpty()) throw new SheetNotFoundException("spreadsheet not found!");
         return mapToSpreadsheetResponse(spreadsheet.get());
+    }
+
+    @Override
+    public void setCellValue(String sheetId, String columnName, String cellValue) {
+        Optional<Spreadsheet> optionalSpreadsheet = spreadsheetRepository.findById(sheetId);
+
+        if (optionalSpreadsheet.isPresent()) {
+            Spreadsheet spreadsheet = optionalSpreadsheet.get();
+            Optional<Object> optionalCellValue = spreadsheet.getColumnValueByName(columnName);
+
+            if (optionalCellValue.isPresent()) {
+                Object existingValue = optionalCellValue.get();
+
+                if (isValidCellValue(existingValue, cellValue)) {
+                    spreadsheet.setCellValue(columnName, cellValue);
+                    spreadsheetRepository.save(spreadsheet);
+                } else {
+                    throw new InvalidCellValueException("Invalid value for column '" + columnName + "'.");
+                }
+            } else {
+                throw new ColumnNotFoundException("Column '" + columnName + "' not found.");
+            }
+        } else {
+            throw new SheetNotFoundException("Sheet with ID '" + sheetId + "' not found.");
+        }
     }
 
     public String createSheet(String jsonPayload) throws JsonProcessingException {
@@ -53,4 +79,36 @@ public class SpreadsheetServiceImpl implements SpreadsheetService {
                 .data(spreadsheet.getData())
                 .build();
     }
+
+    private boolean isValidCellValue(Object columnType, String cellValue) {
+        if (columnType instanceof String columnTypeString) {
+            switch (columnTypeString.toLowerCase()) {
+                case "boolean":
+                    return cellValue.equalsIgnoreCase("true") || cellValue.equalsIgnoreCase("false");
+                case "int":
+                    try {
+                        Integer.parseInt(cellValue);
+                        return true;
+                    } catch (NumberFormatException e) {
+                        return false;
+                    }
+                case "double":
+                    try {
+                        Double.parseDouble(cellValue);
+                        return true;
+                    } catch (NumberFormatException e) {
+                        return false;
+                    }
+                case "string":
+                    return true;
+                default:
+                    return false;
+            }
+        }
+        return false;
+    }
+
+
+
 }
+

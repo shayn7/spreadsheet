@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(SpreadsheetRequestException.class)
-    public ResponseEntity<String> handleSpreadsheetRequestException(SpreadsheetRequestException ex) {
+    @ExceptionHandler(SheetNotFoundException.class)
+    public ResponseEntity<String> handleSpreadsheetRequestException(SheetNotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
 

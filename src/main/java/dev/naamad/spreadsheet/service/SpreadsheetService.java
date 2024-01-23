@@ -11,4 +11,6 @@ public interface SpreadsheetService {
     String createSheet(String jsonPayload) throws JsonProcessingException;
 
     SpreadsheetResponse getSheetById(String sheetId);
+
+    void setCellValue(String sheetId, String columnName, String cellValue);
 }
