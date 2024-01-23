@@ -1,10 +1,13 @@
 package dev.naamad.spreadsheet.dto;
 
-import dev.naamad.spreadsheet.model.SheetSchema;
 import lombok.Data;
+
+import java.util.List;
+import java.util.Map;
 
 
 @Data
 public class SpreadsheetRequest {
-    private SheetSchema schema;
+    private String id;
+    private Map<String, List<Object>> data;
 }
