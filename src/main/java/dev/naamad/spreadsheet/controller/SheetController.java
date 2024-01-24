@@ -1,5 +1,6 @@
 package dev.naamad.spreadsheet.controller;
 
+import dev.naamad.spreadsheet.dto.CellValueRequest;
 import dev.naamad.spreadsheet.dto.SpreadsheetResponse;
 import dev.naamad.spreadsheet.dto.SpreadsheetRequest;
 import dev.naamad.spreadsheet.service.SheetService;
@@ -25,5 +26,11 @@ public class SheetController {
     @ResponseStatus(HttpStatus.OK)
     public SpreadsheetResponse getSheetById(@PathVariable String sheetId) {
         return sheetService.getSheetById(sheetId);
+    }
+
+    @PutMapping("/set-cell-value")
+    @ResponseStatus(HttpStatus.OK)
+    public SpreadsheetResponse setCellValue(@RequestBody CellValueRequest cellValueRequest) {
+        return sheetService.setCellValue(cellValueRequest);
     }
 }

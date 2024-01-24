@@ -18,4 +18,13 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
 
+    @ExceptionHandler(ColumnNotFoundException.class)
+    public ResponseEntity<String> handleColumnNotFoundException(ColumnNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(InvalidCellValueException.class)
+    public ResponseEntity<String> handleInvalidCellValueException(InvalidCellValueException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    }
 }

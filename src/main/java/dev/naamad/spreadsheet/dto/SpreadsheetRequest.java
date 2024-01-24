@@ -8,6 +8,6 @@ import java.util.Map;
 
 @Data
 public class SpreadsheetRequest {
-    private String id;
+    private String schemaId;
     private Map<String, List<Object>> data;
 }

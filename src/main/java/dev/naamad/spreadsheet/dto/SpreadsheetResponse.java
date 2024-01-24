@@ -10,6 +10,7 @@ import java.util.Map;
 @Builder
 public class SpreadsheetResponse {
 
+    private String id;
     private Map<String, List<Object>> data;
 
 }
