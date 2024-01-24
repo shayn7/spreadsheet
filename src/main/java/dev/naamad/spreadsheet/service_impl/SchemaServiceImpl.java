@@ -48,7 +48,7 @@ public class SchemaServiceImpl implements SchemaService {
         return schemaRepository.save(schema).getId();
     }
 
-    private SchemaResponse mapToSchemaResponse(Schema schema){
+    public SchemaResponse mapToSchemaResponse(Schema schema){
         return SchemaResponse
                 .builder()
                 .data(schema.getData())

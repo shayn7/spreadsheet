@@ -21,7 +21,7 @@ public class Sheet {
 
     @Id
     private String id;
-    private Map<String, List<Object>> data;
+    private Map<String, List<Object>> data = new HashMap<>();;
     @DBRef
     private Schema schema;
 
